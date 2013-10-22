@@ -1,0 +1,17 @@
+﻿[
+{
+  "modid" : "AdvHTTP",
+  "name" : "AdvHTTP",
+  "version" : "0.1.0",
+  "url" : "",
+  "credits" : "",
+  "authors": [
+    "distantcam"
+  ],
+  "description": "Advanced HTTP Usage",
+  "logoFile" : "",
+  "updateUrl" : "",
+  "parent" : "",
+  "screenshots": [
+  ]
+}]

@@ -1,4 +1,4 @@
-﻿package tutorial.generic;
+package tutorial.generic;
 
 public class CommonProxy {
 

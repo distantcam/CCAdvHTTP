@@ -1,4 +1,4 @@
-﻿package tutorial.generic.client;
+package tutorial.generic.client;
 
 import net.minecraftforge.client.MinecraftForgeClient;
 import tutorial.generic.CommonProxy;

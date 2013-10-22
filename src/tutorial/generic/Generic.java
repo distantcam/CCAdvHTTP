@@ -1,4 +1,4 @@
-﻿package tutorial.generic;
+package tutorial.generic;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler; // used in 1.6.2

@@ -60,7 +60,7 @@
 	</Target>
 
 	<!-- Download necessary files -->
-	<Target Name="DownloadFiles" DependsOnTargets="DownloadForge">
+	<Target Name="DownloadFiles">
 		<MakeDir Directories="$(DownloadDir)" />
 		<DownloadFile Address="http://files.minecraftforge.net/minecraftforge/$(ForgeName)" FileName="$(DownloadDir)/$(ForgeName)" Condition="!Exists('$(DownloadDir)/$(ForgeName)')" />
 	</Target>

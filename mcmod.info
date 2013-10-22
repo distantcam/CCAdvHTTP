@@ -2,16 +2,17 @@
 {
   "modid" : "AdvHTTP",
   "name" : "AdvHTTP",
+  "description": "Advanced HTTP Usage",
   "version" : "0.1.0",
   "url" : "",
-  "credits" : "",
-  "authors": [
-    "distantcam"
-  ],
-  "description": "Advanced HTTP Usage",
+  "updateUrl": "",
+  "authors": [ "distantcam" ],
+  "credits": "",
   "logoFile" : "",
-  "updateUrl" : "",
-  "parent" : "",
-  "screenshots": [
-  ]
-}]
+  "screenshots": [ ],
+  "parent":"",
+  "dependencies": [ "ComputerCraft" ],
+  "requiredMods" : [ "ComputerCraft" ],
+  "useDependencyInformation" : "true"
+}
+]

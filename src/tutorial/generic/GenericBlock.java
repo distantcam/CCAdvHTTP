@@ -1,4 +1,4 @@
-﻿package tutorial.generic;
+package tutorial.generic;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

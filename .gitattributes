@@ -7,9 +7,12 @@
 #
 # These files are text and should be normalized (Convert crlf => lf)
 *.java text
-*.xml text
-*.txt text
-*.proj text
+
+# Don't check these into the repo as LF to work around TeamCity bug
+*.xml     -text 
+*.targets -text
+*.txt     -text
+*.proj    -text
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)

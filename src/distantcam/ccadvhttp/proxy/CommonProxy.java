@@ -17,7 +17,7 @@ public class CommonProxy {
 		CCAdvHTTP.Blocks.blockAdvHTTP = new BlockAdvHTTP(CCAdvHTTP.blockAdvHTTPID, Material.ground);
 		
 		final ItemStack advHTTPStack = new ItemStack(CCAdvHTTP.Blocks.blockAdvHTTP);
-		GameRegistry.addRecipe(advHTTPStack, new Object[] { "SRS", "SRS", "SSS" }, 'S', Block.stone, 'R', Item.redstone);
+		GameRegistry.addRecipe(advHTTPStack, "SRS", "SRS", "SSS", 'S', Block.stone, 'R', Item.redstone);
 		GameRegistry.registerBlock(CCAdvHTTP.Blocks.blockAdvHTTP, "blockAdvHTTP.ccadvhttp.distantcam");
 
 		GameRegistry.registerTileEntity(TileEntityAdvHTTP.class, "blockAdvHTTPTileEntity.ccadvhttp.distantcam");

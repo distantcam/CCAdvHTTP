@@ -1,16 +1,23 @@
 ﻿package distantcam.ccadvhttp.tile;
 
-import java.io.*;
-import java.net.*;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 import distantcam.ccadvhttp.HTTPRequestException;
 import distantcam.ccadvhttp.ResponseObject;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 public class TileEntityAdvHTTP extends TileEntity implements IPeripheral {
 
@@ -42,12 +49,12 @@ public class TileEntityAdvHTTP extends TileEntity implements IPeripheral {
         }
         
         for (int i = 2; i < arguments.length; i++) {
-        	if (!(arguments[i] instanceof String)) {
+        	if (arguments[i] != null && !(arguments[i] instanceof String)) {
                 throw new Exception("String expected for argument " + i);
             }
         }
         
-        if (arguments.length > 2 && arguments.length % 2 != 0) {
+        if (arguments.length > 3 && arguments.length % 2 != 0) {
         	throw new Exception("Request properties must be in pairs");
         }
 
@@ -57,12 +64,14 @@ public class TileEntityAdvHTTP extends TileEntity implements IPeripheral {
             postString = arguments[1].toString();
         }
         
-        int requestPropertiesLength = arguments.length > 2 ? arguments.length - 2 : 0;
-        String[] requestProperties = new String[requestPropertiesLength];
-        for (int i = 2; i < arguments.length; i++) {
-        	requestProperties[i - 2] = arguments[i].toString();
+        String[] requestProperties = null;        
+        if (arguments.length > 3) {
+        	requestProperties = new String[arguments.length - 2];
+	        for (int i = 2; i < arguments.length; i++) {
+	        	requestProperties[i - 2] = arguments[i].toString();
+	        }
         }
-        
+
         return DoHTTPRequest(urlString, postString, requestProperties);
 	}
 
@@ -92,7 +101,7 @@ public class TileEntityAdvHTTP extends TileEntity implements IPeripheral {
         catch (MalformedURLException e) {
             throw new HTTPRequestException("Invalid URL");
         }
-		
+				
 		try {
 			final HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 	        if (postString == null) {
@@ -107,9 +116,13 @@ public class TileEntityAdvHTTP extends TileEntity implements IPeripheral {
 	            writer.write(postString, 0, postString.length());
 	            writer.close();
 	        }
-	        for (int i = 0; i < requestProperties.length; i+=2) {
-	        	connection.setRequestProperty(requestProperties[i], requestProperties[i+1]);
+	        	        
+	        if (requestProperties != null) {
+		        for (int i = 0; i < requestProperties.length; i+=2) {
+		        	connection.setRequestProperty(requestProperties[i], requestProperties[i+1]);
+		        }
 	        }
+	        	        
 	        final InputStream is = connection.getInputStream();
             final InputStreamReader isr = new InputStreamReader(is);
             final BufferedReader reader = new BufferedReader(isr);

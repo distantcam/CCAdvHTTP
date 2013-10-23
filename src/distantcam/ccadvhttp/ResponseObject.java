@@ -1,7 +1,5 @@
 ﻿package distantcam.ccadvhttp;
 
-import java.io.*;
-
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.ILuaObject;
 

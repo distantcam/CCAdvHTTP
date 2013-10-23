@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Main" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)</MSBuildCommunityTasksPath>
 	</PropertyGroup>
@@ -10,7 +10,8 @@
 		<MCVersion>1.6.4</MCVersion>
 		<ForgeVersion>9.11.1.916</ForgeVersion>
 		<ModVersion>0.1.0</ModVersion>
-		<ModName>tutorial</ModName>
+		<ModName>CCAdvHTTP</ModName>
+		<PackageRoot>distantcam</PackageRoot>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -22,17 +23,13 @@
 		<ClassesDir>$(BuildDir)/classes</ClassesDir>
 		<JarDir>$(BuildDir)/dist</JarDir>
 
-		<ForgeDir>$(BuildDir)/forge</ForgeDir>
+		<ForgeDir>forge</ForgeDir>
 		<MCPDir>$(ForgeDir)/mcp</MCPDir>
 
 		<MCPSrcDir>$(MCPDir)/src/minecraft</MCPSrcDir>
 
 		<ForgeName>minecraftforge-src-$(MCVersion)-$(ForgeVersion).zip</ForgeName>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<SourceFiles Include="$(SrcDir)/**/*" />
-	</ItemGroup>
 
 	<UsingTask TaskName="DownloadFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
 		<ParameterGroup>
@@ -67,25 +64,38 @@
 
 	<!-- Setup mcp and forge -->
 	<Target Name="Setup" DependsOnTargets="DownloadFiles" Condition="!Exists('$(DownloadDir)/$(ForgeName)') OR !Exists('$(MCPSrcDir)')">
-		<RemoveDir Directories="$(MCPDir)" />
 		<RemoveDir Directories="$(ForgeDir)" />
 
 		<Unzip
 			ZipFileName="$(DownloadDir)/$(ForgeName)"
-			TargetDirectory="$(BuildDir)" />
+			TargetDirectory="$(MSBuildProjectDirectory)" />
 
 		<Exec WorkingDirectory="$(ForgeDir)" Command="cmd.exe /c install.cmd" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="InitializeVersion;Setup">
-		<RemoveDir Directories="$(ClassesDir)" />
-		<MakeDir Directories="$(ClassesDir)" />
-
-		<Copy SourceFiles="@(SourceFiles)" DestinationFiles="@(SourceFiles->'$(MCPSrcDir)/%(RecursiveDir)%(Filename)%(Extension)')" />
+	<Target Name="InstallSrc" DependsOnTargets="Setup">
+		<ItemGroup>
+			<SourceFiles Include="$(SrcDir)/$(PackageRoot)/**/*" />
+		</ItemGroup>
+		<RemoveDir Directories="$(MCPSrcDir)/$(PackageRoot)" />
+		<Copy SourceFiles="@(SourceFiles)" DestinationFiles="@(SourceFiles->'$(MCPSrcDir)/$(PackageRoot)/%(RecursiveDir)%(Filename)%(Extension)')" />
 		<FileUpdate
 			Files="@(SourceFiles)"
 			Regex="\@VERSION\@"
 			ReplacementText="$(ModVersion)" />
+	</Target>
+
+	<Target Name="ExtractSrc" DependsOnTargets="Setup">
+		<ItemGroup>
+			<MCPSourceFiles Include="$(MCPSrcDir)/$(PackageRoot)/**/*" />
+		</ItemGroup>
+		<RemoveDir Directories="$(SrcDir)/$(PackageRoot)" />
+		<Copy SourceFiles="@(MCPSourceFiles)" DestinationFiles="@(MCPSourceFiles->'$(SrcDir)/$(PackageRoot)/%(RecursiveDir)%(Filename)%(Extension)')" />
+	</Target>
+
+	<Target Name="Compile" DependsOnTargets="InitializeVersion;Setup;InstallSrc">
+		<RemoveDir Directories="$(ClassesDir)" />
+		<MakeDir Directories="$(ClassesDir)" />
 
 		<!-- Recompile -->
 		<Exec WorkingDirectory="$(MCPDir)" Command="cmd.exe /c recompile.bat" />
@@ -94,24 +104,21 @@
 		<Exec WorkingDirectory="$(MCPDir)" Command="cmd.exe /c reobfuscate_srg.bat" />
 
 		<ItemGroup>
-			<OutputFiles Include="$(MCPDir)/reobf/minecraft/$(ModName)/**/*" />
-			<AssetFiles Include="assets/$(ModName)/**/*" />
+			<OutputFiles Include="$(MCPDir)/reobf/minecraft/**/*" />
+			<AssetFiles Include="assets/**/*" />
 		</ItemGroup>
 
 		<!-- Copy classes -->
-		<Copy SourceFiles="@(OutputFiles)" DestinationFiles="@(OutputFiles->'$(ClassesDir)/$(ModName)/%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(OutputFiles)" DestinationFiles="@(OutputFiles->'$(ClassesDir)/%(RecursiveDir)%(Filename)%(Extension)')" />
 
 		<!-- Copy resources -->
-		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(ClassesDir)/assets/$(ModName)/%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(ClassesDir)/assets/%(RecursiveDir)%(Filename)%(Extension)')" />
 
 		<Copy SourceFiles="mcmod.info" DestinationFolder="$(ClassesDir)" />
 		<FileUpdate
 			Files="mcmod.info"
 			Regex="\@VERSION\@"
 			ReplacementText="$(ModVersion)" />
-
-		<!-- Reset src dir to post-forge-install state -->
-		<RemoveDir Directories="$(MCPSrcDir)/$(ModName)" />
 	</Target>
 
 	<Target Name="Package" DependsOnTargets="Compile">
@@ -120,7 +127,7 @@
 		<Exec Command='jar cvf "$(JarDir)/$(ModName)-$(ModVersion).jar" -C "$(ClassesDir)/" .' />
 	</Target>
 
-	<Target Name="Main" DependsOnTargets="Package">
+	<Target Name="Build" DependsOnTargets="Package">
 		<MakeDir Directories="bin" Condition="!Exists('bin')" />
 		<Copy SourceFiles="$(JarDir)/$(ModName)-$(ModVersion).jar" DestinationFolder="bin" />
 	</Target>

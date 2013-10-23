@@ -1,4 +1,4 @@
-package distantcam.ccadvhttp;
+﻿package distantcam.ccadvhttp;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -11,7 +11,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import distantcam.ccadvhttp.block.BlockAdvHTTP;
 import distantcam.ccadvhttp.tile.TileEntityAdvHTTP;
 
-@Mod(modid="distantcam.ccadvhttp", dependencies="required-after:ComputerCraft;after:CCTurtle")
+@Mod(modid="distantcam.ccadvhttp", name="CCAdvHTTP", version="@VERSION@", dependencies="required-after:ComputerCraft;after:CCTurtle")
 @NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class CCAdvHTTP {
 	

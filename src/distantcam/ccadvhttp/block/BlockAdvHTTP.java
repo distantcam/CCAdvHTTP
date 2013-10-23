@@ -1,4 +1,4 @@
-package distantcam.ccadvhttp.block;
+﻿package distantcam.ccadvhttp.block;
 
 import distantcam.ccadvhttp.tile.TileEntityAdvHTTP;
 import net.minecraft.block.BlockContainer;

@@ -1,9 +1,9 @@
 ﻿[
 {
-  "modid" : "AdvHTTP",
+  "modid" : "distantcam.ccadvhttp",
   "name" : "AdvHTTP",
   "description": "Advanced HTTP Usage",
-  "version" : "0.1.0",
+  "version" : "@VERSION@",
   "url" : "",
   "updateUrl": "",
   "authors": [ "distantcam" ],

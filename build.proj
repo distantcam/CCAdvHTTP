@@ -80,7 +80,12 @@
 		<RemoveDir Directories="$(MCPSrcDir)/$(PackageRoot)" />
 		<Copy SourceFiles="@(SourceFiles)" DestinationFiles="@(SourceFiles->'$(MCPSrcDir)/$(PackageRoot)/%(RecursiveDir)%(Filename)%(Extension)')" />
 		<FileUpdate
-			Files="@(SourceFiles)"
+			Files="@(SourceFiles->'$(MCPSrcDir)/$(PackageRoot)/%(RecursiveDir)%(Filename)%(Extension)')"
+			Regex="\@VERSION\@"
+			ReplacementText="$(ModVersion)" />
+		<Copy SourceFiles="mcmod.info" DestinationFolder="$(MCPSrcDir)" />
+		<FileUpdate
+			Files="$(MCPSrcDir)/mcmod.info"
 			Regex="\@VERSION\@"
 			ReplacementText="$(ModVersion)" />
 	</Target>
@@ -91,6 +96,15 @@
 		</ItemGroup>
 		<RemoveDir Directories="$(SrcDir)/$(PackageRoot)" />
 		<Copy SourceFiles="@(MCPSourceFiles)" DestinationFiles="@(MCPSourceFiles->'$(SrcDir)/$(PackageRoot)/%(RecursiveDir)%(Filename)%(Extension)')" />
+		<FileUpdate
+			Files="@(MCPSourceFiles->'$(SrcDir)/$(PackageRoot)/%(RecursiveDir)%(Filename)%(Extension)')"
+			Regex='\"$(ModVersion)\"'
+			ReplacementText='"@VERSION@"' />
+		<Copy SourceFiles="$(MCPSrcDir)/mcmod.info" DestinationFolder="$(MSBuildProjectDirectory)" />
+		<FileUpdate
+			Files="mcmod.info"
+			Regex='\"$(ModVersion)\"'
+			ReplacementText='"@VERSION@"' />
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="InitializeVersion;Setup;InstallSrc">
@@ -116,7 +130,7 @@
 
 		<Copy SourceFiles="mcmod.info" DestinationFolder="$(ClassesDir)" />
 		<FileUpdate
-			Files="mcmod.info"
+			Files="$(ClassesDir)/mcmod.info"
 			Regex="\@VERSION\@"
 			ReplacementText="$(ModVersion)" />
 	</Target>

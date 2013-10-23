@@ -1,28 +1,55 @@
 ﻿package distantcam.ccadvhttp;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import distantcam.ccadvhttp.block.BlockAdvHTTP;
-import distantcam.ccadvhttp.tile.TileEntityAdvHTTP;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@Mod(modid="distantcam.ccadvhttp", name="CCAdvHTTP", version="@VERSION@", dependencies="required-after:ComputerCraft;after:CCTurtle")
+import net.minecraft.block.Block;
+import net.minecraftforge.common.Configuration;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkMod;
+import distantcam.ccadvhttp.proxy.CommonProxy;
+
+@Mod(modid=CCAdvHTTP.ID, name=CCAdvHTTP.NAME, version=CCAdvHTTP.VERSION, dependencies="required-after:ComputerCraft;after:CCTurtle", useMetadata = true)
 @NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class CCAdvHTTP {
 	
-	Block blockAdvHTTP = new BlockAdvHTTP(496,Material.ground);
+	public static final String ID = "distantcam.ccadvhttp";
+    public static final String NAME = "CCAdvHTTP";
+    public static final String VERSION = "@VERSION@";
+	
+	@Instance(ID)
+	public static CCAdvHTTP instance;
+	
+	@SidedProxy(clientSide = "distantcam.ccadvhttp.proxy.ClientProxy", serverSide = "distantcam.ccadvhttp.proxy.CommonProxy")
+	public static CommonProxy proxy;
+	
+	public static Logger logger;
+	
+	public static int blockAdvHTTPID;
+		
+	@Mod.EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
+		logger.setParent(FMLLog.getLogger());
+		
+		logger.log(Level.INFO, NAME + " v" + VERSION);
+
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+		blockAdvHTTPID = config.getBlock("block", "AdvHTTP", 567).getInt();
+	}
 	
 	@Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-		GameRegistry.registerTileEntity(TileEntityAdvHTTP.class, "blockAdvHTTPTileEntity.ccadvhttp.distantcam");
-        GameRegistry.registerBlock(blockAdvHTTP, "blockAdvHTTP.ccadvhttp.distantcam");
-        LanguageRegistry.addName(blockAdvHTTP, "Advanced HTTP");
-        blockAdvHTTP.setCreativeTab(CreativeTabs.tabMisc);
+    	proxy.init();
     }
 	
+	public static class Blocks {
+		public static Block blockAdvHTTP;
+	}
 }

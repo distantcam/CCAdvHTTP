@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 public class CommonProxy {
 	
 	public void init() {
-		CCAdvHTTP.Blocks.blockAdvHTTP = new BlockAdvHTTP(CCAdvHTTP.blockAdvHTTPID, Material.ground);
+		CCAdvHTTP.Blocks.blockAdvHTTP = new BlockAdvHTTP();
 		
 		final ItemStack advHTTPStack = new ItemStack(CCAdvHTTP.Blocks.blockAdvHTTP);
 		GameRegistry.addRecipe(advHTTPStack, "SRS", "SRS", "SSS", 'S', Block.stone, 'R', Item.redstone);
@@ -23,8 +23,6 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileEntityAdvHTTP.class, "blockAdvHTTPTileEntity.ccadvhttp.distantcam");
         
         LanguageRegistry.addName(CCAdvHTTP.Blocks.blockAdvHTTP, "Advanced HTTP");
-        
-        CCAdvHTTP.Blocks.blockAdvHTTP.setCreativeTab(CreativeTabs.tabMisc);		
 	}
 
 }

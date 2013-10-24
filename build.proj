@@ -77,6 +77,7 @@
 	<Target Name="InstallSrc" DependsOnTargets="Setup">
 		<ItemGroup>
 			<SourceFiles Include="$(SrcDir)/$(PackageRoot)/**/*" />
+			<AssetFiles Include="$(AssetsDir)/**/*" />
 		</ItemGroup>
 		<RemoveDir Directories="$(MCPSrcDir)/$(PackageRoot)" />
 		<Copy SourceFiles="@(SourceFiles)" DestinationFiles="@(SourceFiles->'$(MCPSrcDir)/$(PackageRoot)/%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -89,6 +90,7 @@
 			Files="$(MCPSrcDir)/mcmod.info"
 			Regex="\@VERSION\@"
 			ReplacementText="$(ModVersion)" />
+		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(MCPSrcDir)/assets/%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 
 	<Target Name="ExtractSrc" DependsOnTargets="Setup">
@@ -127,7 +129,7 @@
 		<Copy SourceFiles="@(OutputFiles)" DestinationFiles="@(OutputFiles->'$(ClassesDir)/%(RecursiveDir)%(Filename)%(Extension)')" />
 
 		<!-- Copy resources -->
-		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(ClassesDir)/%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(ClassesDir)/assets/%(RecursiveDir)%(Filename)%(Extension)')" />
 
 		<Copy SourceFiles="mcmod.info" DestinationFolder="$(ClassesDir)" />
 		<FileUpdate

@@ -18,7 +18,7 @@ import distantcam.ccadvhttp.proxy.CommonProxy;
 @NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class CCAdvHTTP {
 	
-	public static final String ID = "distantcam.ccadvhttp";
+	public static final String ID = "ccadvhttp";
     public static final String NAME = "CCAdvHTTP";
     public static final String VERSION = "@VERSION@";
 	

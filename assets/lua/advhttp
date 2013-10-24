@@ -1,0 +1,54 @@
+for _, side in pairs( rs.getSides() ) do
+    if peripheral.isPresent( side ) and peripheral.getType( side ) == "CCAdvHTTP" then
+        advHTTPPeriph = peripheral.wrap(side)
+        break
+    end
+end
+
+if not advHTTPPeriph then
+    error("Connecting to CCAdvHTTP peripheral failed.")
+end
+
+local function checkAPI()
+    if not advHTTPPeriph then
+        error("No CCAdvHTTP peripheral present!\nPlease reboot, place CCAdvHTTP connector\nnext to computer & reload the API.")
+    end
+end
+
+function get(url)
+	checkAPI()
+	local request = peripheral.call(side, "request", url)
+	request.setMethod("get")
+	request.setProperty("User-Agent", "ComputerCraft")
+	local response = request.connect()
+	while true do
+		if response.isComplete() then
+			break
+		end
+		sleep(0)
+	end
+	if response.wasSuccessful() then
+		return response.result()
+	else
+		return nil
+	end
+end
+
+function post(url, post)
+	checkAPI()
+	local request = peripheral.call(side, "request", url)
+	request.setMethod("post")
+	request.setOutput(post)
+	local response = request.connect()
+	while true do
+		if response.isComplete() then
+			break
+		end
+		sleep(0)
+	end
+	if response.wasSuccessful() then
+		return response.result()
+	else
+		return nil
+	end
+end

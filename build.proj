@@ -17,6 +17,7 @@
 	<PropertyGroup>
 		<BuildDir>build</BuildDir>
 		<SrcDir>src</SrcDir>
+		<AssetsDir>assets</AssetsDir>
 		
 		<DownloadDir>download</DownloadDir>
 
@@ -119,14 +120,14 @@
 
 		<ItemGroup>
 			<OutputFiles Include="$(MCPDir)/reobf/minecraft/**/*" />
-			<AssetFiles Include="assets/**/*" />
+			<AssetFiles Include="$(AssetsDir)/**/*" />
 		</ItemGroup>
 
 		<!-- Copy classes -->
 		<Copy SourceFiles="@(OutputFiles)" DestinationFiles="@(OutputFiles->'$(ClassesDir)/%(RecursiveDir)%(Filename)%(Extension)')" />
 
 		<!-- Copy resources -->
-		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(ClassesDir)/assets/%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(ClassesDir)/%(RecursiveDir)%(Filename)%(Extension)')" />
 
 		<Copy SourceFiles="mcmod.info" DestinationFolder="$(ClassesDir)" />
 		<FileUpdate

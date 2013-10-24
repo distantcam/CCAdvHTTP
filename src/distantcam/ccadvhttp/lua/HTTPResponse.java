@@ -1,4 +1,4 @@
-﻿package distantcam.ccadvhttp.lua;
+package distantcam.ccadvhttp.lua;
 
 import java.io.*;
 import java.net.*;

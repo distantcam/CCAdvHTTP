@@ -1,4 +1,4 @@
-﻿package distantcam.ccadvhttp.block;
+package distantcam.ccadvhttp.block;
 
 import distantcam.ccadvhttp.CCAdvHTTP;
 import distantcam.ccadvhttp.tile.TileEntityAdvHTTP;

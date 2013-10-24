@@ -1,4 +1,4 @@
-﻿package distantcam.ccadvhttp;
+package distantcam.ccadvhttp;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

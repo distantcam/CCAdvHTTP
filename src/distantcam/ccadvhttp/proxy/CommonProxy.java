@@ -1,4 +1,4 @@
-﻿package distantcam.ccadvhttp.proxy;
+package distantcam.ccadvhttp.proxy;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;

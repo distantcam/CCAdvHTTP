@@ -1,4 +1,4 @@
-﻿package distantcam.ccadvhttp.tile;
+package distantcam.ccadvhttp.tile;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

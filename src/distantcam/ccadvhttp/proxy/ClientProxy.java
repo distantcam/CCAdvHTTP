@@ -1,4 +1,4 @@
-﻿package distantcam.ccadvhttp.proxy;
+package distantcam.ccadvhttp.proxy;
 
 public class ClientProxy extends CommonProxy {
 

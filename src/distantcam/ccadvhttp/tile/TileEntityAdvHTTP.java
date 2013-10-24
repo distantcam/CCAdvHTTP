@@ -1,25 +1,20 @@
 package distantcam.ccadvhttp.tile;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
+import java.util.HashMap;
+import java.util.logging.Level;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
-import dan200.computer.api.IPeripheral;
+import dan200.computer.api.*;
+import distantcam.ccadvhttp.CCAdvHTTP;
 import distantcam.ccadvhttp.lua.HTTPRequest;
 
 public class TileEntityAdvHTTP extends TileEntity implements IPeripheral {
 
+	private static HashMap<Integer, Integer> mountMap = new HashMap<Integer, Integer>();
+	
 	private World world;
 	
 	public TileEntityAdvHTTP(World world) {
@@ -59,9 +54,38 @@ public class TileEntityAdvHTTP extends TileEntity implements IPeripheral {
 
 	@Override
 	public void attach(IComputerAccess computer) {
+		if (CCAdvHTTP.mount != null) {
+			int id = computer.getID();
+
+	        int mountCount = 0;
+	        if (mountMap.containsKey(id)) {
+	        	mountCount = mountMap.get(id);
+	        }
+	        if (mountCount < 1) {
+	            mountCount = 0;
+	            computer.mount("ahttp", CCAdvHTTP.mount);
+	        }
+	        mountMap.put(id, mountCount + 1);
+		}
 	}
 
 	@Override
 	public void detach(IComputerAccess computer) {
+		if (CCAdvHTTP.mount != null) {
+			int id = computer.getID();
+	        int mountCount = 0;
+	        if (mountMap.containsKey(id)) {
+	        	mountCount = mountMap.get(id);
+	        }
+	        mountCount--;
+	        if (mountCount < 1) {
+	            mountCount = 0;
+	            try {
+	                computer.unmount("ahttp");
+	            } catch (Exception e) {
+	            }
+	        }
+	        mountMap.put(id, mountCount);
+		}
 	}
 }

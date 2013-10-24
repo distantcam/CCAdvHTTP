@@ -11,7 +11,7 @@ end
 
 local function checkAPI()
     if not advHTTPPeriph then
-        error("No CCAdvHTTP peripheral present!\nPlease reboot, place CCAdvHTTP connector\nnext to computer & reload the API.")
+        error("No CCAdvHTTP peripheral present!\nPlease reboot, place a CCAdvHTTP connector\nnext to the computer & reload the API.")
     end
 end
 

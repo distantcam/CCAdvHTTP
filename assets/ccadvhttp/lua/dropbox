@@ -1,0 +1,123 @@
+for _, side in pairs( rs.getSides() ) do
+  if peripheral.isPresent( side ) and peripheral.getType( side ) == "CCAdvHTTP" then
+    advHTTPPeriph = peripheral.wrap(side)
+    break
+  end
+end
+
+if not advHTTPPeriph then
+  error("Dropbox requires a CCAdvHTTP peripheral.\nPlease place a CCAdvHTTP connector\nnext to the computer & try again.")
+end
+
+if not json then
+  os.loadAPI("json")
+end
+
+function doRequest(request)
+  local response = request.connect()
+  while true do
+    if response.isComplete() then
+      break
+    end
+    sleep(0)
+  end
+  if response.wasSuccessful() then
+    return response.result()
+  else
+    return nil
+  end
+end
+
+function getToken(code)
+  local request = advHTTPPeriph.request("https://api.dropbox.com/1/oauth2/token")
+  request.setMethod("post")
+  request.setOutput("code="..code.."&grant_type=authorization_code&client_id=a4p7oenv1jykv30&client_secret=ijx7kyvxiijlpky")
+  local response = json.decode(doRequest(request))
+  return response.access_token
+end
+
+function getDelta(token, cursor)
+  local request = advHTTPPeriph.request("https://api.dropbox.com/1/delta")
+  request.setMethod("post")
+  local bearer = "Bearer "..token
+  request.setProperty("Authorization", bearer)
+  if cursor ~= " " then
+    local post = "cursor="..cursor
+    request.setOutput(post)
+  end
+  return json.decode(doRequest(request))
+end
+
+function saveSettings(settings)
+  local h = fs.open("/.dropbox", "w")
+  h.write(json.encodePretty(settings))
+  h.close()
+end
+
+function updateFile(token, path)
+  local url = "https://api-content.dropbox.com/1/files/sandbox"..path
+  local request = advHTTPPeriph.request(url)
+  request.setMethod("get")
+  local bearer = "Bearer "..token
+  request.setProperty("Authorization", bearer)
+
+  local h = fs.open(path, "w")
+  h.write(doRequest(request))
+  h.close()
+end
+
+function updateEntry(token, path, meta)
+  if not meta then
+    if fs.exists(path) then
+      fs.delete(path)
+      print("Deleted "..path)
+    end
+  else
+    if meta.is_dir and not fs.isDir(path) then
+      if fs.exists(path) then
+        fs.delete(path)
+      end
+      fs.makeDir(path)
+      print("Created "..path.."/")
+    elseif not meta.is_dir then
+      updateFile(token, path)
+      print("Created "..path)
+    end
+  end
+end
+
+local args = (...)
+
+if not args then
+  if fs.exists("/.dropbox") then
+    args = { "sync" }
+  else
+    args = { "setup" }
+  end
+end
+
+if args[1] == "setup" then
+  local settings = { }
+
+  print("Enter your dropbox authorization code:")
+  local code = io.read()
+  
+  settings.token = getToken(code)
+  settings.cursor = " "
+
+  saveSettings(settings)
+
+  args[1] = "sync"
+end
+
+if args[1] == "sync" then
+  local settings = json.decodeFromFile("/.dropbox")
+
+  local delta = getDelta(settings.token, settings.cursor)
+  settings.cursor = delta.cursor
+  saveSettings(settings)
+
+  for _, entry in ipairs(delta.entries) do
+    updateEntry(settings.token, entry[1], entry[2])
+  end
+end

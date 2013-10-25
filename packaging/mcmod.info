@@ -1,0 +1,15 @@
+[
+{
+  "modid" : "ccadvhttp",
+  "name" : "CCAdvHTTP",
+  "description": "Advanced HTTP Peripheral for ComputerCraft.",
+  "version" : "@VERSION@",
+  "url" : "",
+  "updateUrl": "",
+  "authors": [ "Cameron MacFarland (distantcam)" ],
+  "credits": "The makers of #ComputerCraft and #OpenPeripherals",
+  "logoFile" : "assets/ccadvhttp/textures/gui/logo.png",
+  "screenshots": [ ],
+  "parent":""
+}
+]

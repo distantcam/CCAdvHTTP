@@ -74,7 +74,7 @@
 		<Exec WorkingDirectory="$(ForgeDir)" Command="cmd.exe /c install.cmd" />
 	</Target>
 
-	<Target Name="InstallSrc" DependsOnTargets="Setup">
+	<Target Name="ImportSrc" DependsOnTargets="Setup">
 		<ItemGroup>
 			<SourceFiles Include="$(SrcDir)/$(PackageRoot)/**/*" />
 			<AssetFiles Include="$(AssetsDir)/**/*" />
@@ -95,7 +95,7 @@
 		<Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(MCPSrcDir)/assets/%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 
-	<Target Name="ExtractSrc" DependsOnTargets="Setup">
+	<Target Name="ExportSrc" DependsOnTargets="Setup">
 		<ItemGroup>
 			<MCPSourceFiles Include="$(MCPSrcDir)/$(PackageRoot)/**/*" />
 		</ItemGroup>
@@ -113,7 +113,7 @@
 			ReplacementText='"@VERSION@"' />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="InitializeVersion;Setup;InstallSrc">
+	<Target Name="Compile" DependsOnTargets="InitializeVersion;Setup;ImportSrc">
 		<RemoveDir Directories="$(ClassesDir)" />
 		<MakeDir Directories="$(ClassesDir)" />
 

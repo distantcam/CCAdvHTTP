@@ -45,8 +45,9 @@ public class CCAdvHTTP {
 		
 		logger.log(Level.INFO, NAME + " v" + VERSION);
 		
-		mount = ComputerCraftAPI.createResourceMount(CCAdvHTTP.class, "ccadvhttp", "lua");
-				
+		//mount = ComputerCraftAPI.createResourceMount(CCAdvHTTP.class, "ccadvhttp", "lua");
+		mount = new ScriptsMount();	
+		
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		blockAdvHTTPID = config.getBlock("block", "AdvHTTP", 567).getInt();
